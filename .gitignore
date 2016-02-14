@@ -1,0 +1,5 @@
+*.so
+*.o
+_RData
+_RHistory
+data/teste_1
