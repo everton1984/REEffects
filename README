@@ -1,1 +1,3 @@
 # Malex
+Change include directory on the build script ** automate this **
+Run pyire.py from within the bin directory so the module can be loaded ** fix this **
