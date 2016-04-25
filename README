@@ -1,3 +1,9 @@
 # Malex
-Change include directory on the build script ** automate this **
-Run pyire.py from within the bin directory so the module can be loaded ** fix this **
+
+25/04/2016 - 
+    # You need boost, cgal, gmp, mpfr and gdal to build this. On Archlinux I had just to add gdal and cgal as I remember. Right now the "build"
+script is ugly but it works, should think about updating it in the future.
+
+Older[ Deprecated right now ] - 
+    # Change include directory on the build script ** automate this **
+    # Run pyire.py from within the bin directory so the module can be loaded ** fix this **
