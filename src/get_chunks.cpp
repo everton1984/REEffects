@@ -56,11 +56,15 @@ vector<Kernel::Segment_2> roads;
 vector<Kernel::Point_2> points;
 
 int main(int argc, char *argv[]){
-    double rmax = 10000;
+    double rmax = 1000;
     GDALAllRegister();
 
-    readGisFile("./data/gis/Frag_Macacu_pontos_UTMSAD6923S.shp", "./out/points_all", true);
-    readGisFile("./data/gis/estradas_Macacu.shp", "./out/roads_all", true);
+    /*
+    readGisFile("./data/gis/Frag_Macacu_pontos_UTMSAD6923S.shp", "./out/points_macacu_all", true);
+    readGisFile("./data/gis/estradas_Macacu.shp", "./out/roads_caucaia_all", true);
+    */
+    readGisFile("./data/gis/estrada_2000.shp", "./out/roads_caucaia_all", true);
+    readGisFile("./data/gis/mamif_coord.shp", "./out/points_caucaia_all", true);
 
     cout << roads.size() << endl;
     cout << points.size() << endl;
@@ -69,7 +73,6 @@ int main(int argc, char *argv[]){
     //CGAL::insert_non_intersecting_curves(env,roads.begin(),roads.end());
     int i = 0;
     for(vector<Kernel::Point_2>::iterator it = points.begin(); it != points.end(); ++it ){    
-        /* [DEBUG] This is the case where we have a polygon without holes, just a test */
         /*
         Arr_traits_2 arr_traits;
         Arr_traits_2::Construct_curve_2 construct_curve = arr_traits.construct_curve_2_object();
@@ -84,7 +87,7 @@ int main(int argc, char *argv[]){
         */
         Arrangement_2 boundArr = env;
         vector<Kernel::Segment_2> boundingPoly;
-        constructBoundingPolygon(rmax/2,*it,&boundingPoly);
+        constructBoundingPolygon(rmax,*it,&boundingPoly);
         //CGAL::insert_non_intersecting_curves(env,boundingPoly.begin(),boundingPoly.end());
         CGAL::insert(boundArr,boundingPoly.begin(), boundingPoly.end());
 
@@ -138,7 +141,7 @@ int main(int argc, char *argv[]){
         //dumpArrangement(&output_arr,"roads" + to_string(i) + ".dat");
         //dumpArrangement(&overlay,"roads" + to_string(i) + ".dat");
         ofstream pf;
-        pf.open("./out/points_" + to_string(i));
+        pf.open("./out/points_caucaia_" + to_string(i));
         pf << setprecision(20);
 
         if( !pf.is_open() ){
@@ -147,7 +150,7 @@ int main(int argc, char *argv[]){
         }
         pf << (*it).x() << " " << (*it).y() << endl;
         pf.close();
-        dumpArrangement(&res,"./out/chunks_" + to_string(i));
+        dumpArrangement(&res,"./out/chunks_caucaia_" + to_string(i));
 
         cout << i << ":" << output_arr.number_of_edges() << endl;
         i++;

@@ -1,1 +1,1 @@
-g++ -g -lgmp -lmpfr -lboost_thread -lgdal -lCGAL_Core -lCGAL src/ire.cpp -o bin/ire
+g++ -g src/ire.cpp -o bin/ire

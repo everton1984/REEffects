@@ -1,5 +1,10 @@
 # Malex
 
+10/05/2016 - 
+    # Now you need the out folder, run get_chunks to create the visible neighborhoods of the points and finally run
+    calc_ire.py
+    # I'm using SciPy to calculate IRE.
+
 25/04/2016 - 
     # You need boost, cgal, gmp, mpfr and gdal to build this. On Archlinux I had just to add gdal and cgal as I remember. Right now the "build"
 script is ugly but it works, should think about updating it in the future.
