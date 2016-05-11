@@ -4,19 +4,31 @@ from scipy import linalg
 from scipy import pi 
 import numpy as np
 
-def read_center(idx):
-    pntFile = open("./out/points_caucaia_" + str(idx))
-    
-    l = pntFile.readlines()[0].strip().split(' ')
-    x_center = float(l[0])
-    y_center = float(l[1])
+config = dict()
 
+def read_config():
+    configFile = open("./cfg/config")
+    lines = configFile.readlines()
+    configFile.close()
+
+    for l in lines:
+        d = l.split('=')
+        config[d[0].lower().strip()] = d[1].strip()
+        
+def read_centers(fname):
+    pntFile = open(fname)  
+    lines = pntFile.readlines()
     pntFile.close()
 
-    return np.array([x_center, y_center])
+    points = []
+    for l in lines:
+        d = l.split(' ')
+        points.append(np.array([float(d[0]),float(d[1])]))
 
-def read_roads(idx):
-    roadsFile = open("./out/chunks_caucaia_" + str(idx))
+    return points
+
+def read_roads(fname):
+    roadsFile = open(fname)
     lines = roadsFile.readlines()
     roads = []
     road = []
@@ -37,9 +49,9 @@ def forest_function(R,A,B):
     return (A*R + B)
 
 def h(R):
-    K = 10000
-    A = 0.057
-    B = 16.12
+    K = float(config['k'])
+    A = float(config['a'])
+    B = float(config['b'])
     return K/(2*pi*R*forest_function(R,A,B))
 
 def param_line(t,start,end):
@@ -48,7 +60,7 @@ def param_line(t,start,end):
 def quad_linesegment(c,p1,p2):
     return integrate.quad(lambda t: linalg.norm(np.array([p1[0]-p2[0],p1[1]-p2[1]]))*h(linalg.norm(c-param_line(t,p1,p2))),0,1)
 
-def ire_local(roads,point):
+def ire(roads,point):
     error = 0
     total = 0
     length = 0
@@ -61,10 +73,7 @@ def ire_local(roads,point):
             total = total + y
             error = error + abserr
 
-    avire = 0
-    if length > 0:
-        avire = total/length        
-    
+    avire = total/length
     return (total,avire,error)        
 
 def road_length(r):
@@ -75,24 +84,16 @@ def road_length(r):
         p1 = p
     return length
 
-def ire(point_count):
-    total = 0
-    atotal = 0
-    error = 0
+def calculate_road_index(index_function):
     print "index,ire,avire,error"
-    for i in range(0,(point_count-1)):
-        center = read_center(i)
-        roads = read_roads(i)
+    centers = read_centers(config['output_dir'] + "/points_" + config['output_prefix'] + "_all")
+    for i in range(0,(len(centers)-1)):
+        chunkfName = config['output_dir'] + "/chunks_" + config['output_prefix'] + "_" + str(i)
+        roads = read_roads(chunkfName)
         if len(roads) > 0:
-            (ti,ati,ei) = ire_local(roads,center)
-            #print "index ",i," - ire ",ti," - avire ", ati, " - error ", ei
+            (ti,ati,ei) = index_function(roads,centers[i])
             print i,",",ti,",",ati,",",ei
 
-            total = total + ti
-            atotal = atotal + ati
-            error = error + ei
-
-    return (total,atotal,error)    
-
-ire(20)
+read_config()
+calculate_road_index(ire)
 
