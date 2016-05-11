@@ -3,18 +3,13 @@ import scipy.integrate as integrate
 from scipy import linalg
 from scipy import pi 
 import numpy as np
+import sys
 
-config = dict()
+#local configuration
+import config
 
-def read_config():
-    configFile = open("./cfg/config")
-    lines = configFile.readlines()
-    configFile.close()
+cfg = dict()
 
-    for l in lines:
-        d = l.split('=')
-        config[d[0].lower().strip()] = d[1].strip()
-        
 def read_centers(fname):
     pntFile = open(fname)  
     lines = pntFile.readlines()
@@ -49,9 +44,9 @@ def forest_function(R,A,B):
     return (A*R + B)
 
 def h(R):
-    K = float(config['k'])
-    A = float(config['a'])
-    B = float(config['b'])
+    K = float(cfg['k'])
+    A = float(cfg['a'])
+    B = float(cfg['b'])
     return K/(2*pi*R*forest_function(R,A,B))
 
 def param_line(t,start,end):
@@ -86,14 +81,18 @@ def road_length(r):
 
 def calculate_road_index(index_function):
     print "index,ire,avire,error"
-    centers = read_centers(config['output_dir'] + "/points_" + config['output_prefix'] + "_all")
+    centers = read_centers(cfg['output_dir'] + "/points_" + cfg['output_prefix'] + "_all")
     for i in range(0,(len(centers)-1)):
-        chunkfName = config['output_dir'] + "/chunks_" + config['output_prefix'] + "_" + str(i)
+        chunkfName = cfg['output_dir'] + "/chunks_" + cfg['output_prefix'] + "_" + str(i)
         roads = read_roads(chunkfName)
         if len(roads) > 0:
             (ti,ati,ei) = index_function(roads,centers[i])
             print i,",",ti,",",ati,",",ei
 
-read_config()
+if len(sys.argv) > 1:
+    cfg = config.read_config(sys.argv[1])
+else:
+    cfg = config.read_config(config.DEFAULT_CONFIG_FILE)
+
 calculate_road_index(ire)
 
