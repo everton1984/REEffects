@@ -116,6 +116,8 @@ int main(int argc, char *argv[]){
         TEV tev(boundArr);
         tev.compute_visibility(*it,*face, output_arr);
 
+        dumpArrangement(&output_arr,"./out/chunks_raw_caucaia_" + to_string(i));
+
         Arrangement_2 res;
         vector<Kernel::Segment_2> bounding_roads;
         for( Edge_const_iterator eit = output_arr.edges_begin(); eit != output_arr.edges_end(); ++eit){
@@ -125,6 +127,11 @@ int main(int argc, char *argv[]){
                         envit->source()->point().y() == eit->source()->point().y() &&
                         envit->target()->point().x() == eit->target()->point().x() &&
                         envit->target()->point().y() == eit->target()->point().y() ){
+                    found = true;
+                }else if(envit->source()->point().x() == eit->target()->point().x() &&
+                        envit->source()->point().y() == eit->target()->point().y() &&
+                        envit->target()->point().x() == eit->source()->point().x() &&
+                        envit->target()->point().y() == eit->source()->point().y() ){
                     found = true;
                 }
             }
@@ -136,10 +143,10 @@ int main(int argc, char *argv[]){
         }
         CGAL::insert(res, bounding_roads.begin(), bounding_roads.end());
         //Arrangement_2 overlay;
-        //CGAL::overlay(boundArr,output_arr,overlay);
+        //CGAL::overlay(env,output_arr,overlay);
 
         //dumpArrangement(&output_arr,"roads" + to_string(i) + ".dat");
-        //dumpArrangement(&overlay,"roads" + to_string(i) + ".dat");
+        //dumpArrangement(&overlay,"./out/chunks_raw_caucaia_" + to_string(i));
         ofstream pf;
         pf.open("./out/points_caucaia_" + to_string(i));
         pf << setprecision(20);

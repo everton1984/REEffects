@@ -34,10 +34,10 @@ def read_roads(idx):
     return roads
 
 def forest_function(R,A,B):
-    return A*R + B
+    return (A*R + B)
 
 def h(R):
-    K = 100
+    K = 10000
     A = 0.057
     B = 16.12
     return K/(2*pi*R*forest_function(R,A,B))
@@ -46,7 +46,7 @@ def param_line(t,start,end):
     return np.array([start[0] + t*(end[0]-start[0]),start[1] + t*(end[1]-start[1])])
 
 def quad_linesegment(c,p1,p2):
-    return integrate.quad(lambda t: h(linalg.norm(c-param_line(t,p1,p2))),0,1)
+    return integrate.quad(lambda t: linalg.norm(np.array([p1[0]-p2[0],p1[1]-p2[1]]))*h(linalg.norm(c-param_line(t,p1,p2))),0,1)
 
 def ire_local(roads,point):
     error = 0
@@ -79,12 +79,14 @@ def ire(point_count):
     total = 0
     atotal = 0
     error = 0
+    print "index,ire,avire,error"
     for i in range(0,(point_count-1)):
         center = read_center(i)
         roads = read_roads(i)
         if len(roads) > 0:
             (ti,ati,ei) = ire_local(roads,center)
-            print "index ",i," - ire ",ti," - avire ", ati, " - error ", ei
+            #print "index ",i," - ire ",ti," - avire ", ati, " - error ", ei
+            print i,",",ti,",",ati,",",ei
 
             total = total + ti
             atotal = atotal + ati
@@ -92,5 +94,5 @@ def ire(point_count):
 
     return (total,atotal,error)    
 
-print ire(20)
+ire(20)
 
