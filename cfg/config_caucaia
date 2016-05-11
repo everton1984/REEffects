@@ -1,0 +1,8 @@
+A = 0.057
+B = 16.12
+K = 100000
+Rmax = 1000
+output_dir = ./out/caucaia
+output_prefix = caucaia
+input_roads_file = ./data/gis/caucaia/estrada_2000.shp
+input_points_file = ./data/gis/caucaia/mamif_coord.shp

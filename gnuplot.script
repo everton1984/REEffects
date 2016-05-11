@@ -1,0 +1,1 @@
+plot "points.dat" with points, "roads.dat" with lines

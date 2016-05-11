@@ -1,1 +1,0 @@
-g++ -g -lgmp -lmpfr -lboost_thread -lgdal -lCGAL_Core -lCGAL src/get_chunks.cpp -o bin/get_chunks
