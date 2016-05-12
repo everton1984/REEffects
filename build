@@ -1,1 +1,6 @@
-g++ -g -lgmp -lmpfr -lboost_thread -lgdal -lCGAL_Core -lCGAL src/get_chunks.cpp -o bin/get_chunks
+#!/bin/zsh
+cd src
+cgal_create_CMakeLists
+cd ../bin
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-lgdal ../src
+make
