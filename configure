@@ -1,4 +1,6 @@
 #!/bin/zsh
+mkdir -p bin
+mkdir -p tmp
 cd src
 cgal_create_CMakeLists
 cd ../bin

@@ -1,5 +1,29 @@
 # Malex
 
+** Building **
+
+You will need GDAl and CGAL to build and run this project. Once this is taken care at the root directory type:
+
+$./configure
+$./build
+
+This should do the trick.
+
+For the Python part you will need SciPy.
+
+** Running **
+
+Make sure you have a config file, examples can be found at the cfg directory. Then go to the root directory and type:
+
+$./run.sh <config_file>
+
+Fill the config_file part with the address to the config file you want to use.
+
+** Changelog **
+
+12/05/2016 - 
+    # Now everything is way more straightforward just read the Building/Running section of this README.
+
 10/05/2016 - 
     # Now you need the out folder, run get_chunks to create the visible neighborhoods of the points and finally run
     calc_ire.py
