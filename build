@@ -1,6 +1,5 @@
 #!/bin/zsh
-cd src
-cgal_create_CMakeLists
-cd ../bin
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-lgdal ../src
+cd bin
+make clean
 make
+cd ..
