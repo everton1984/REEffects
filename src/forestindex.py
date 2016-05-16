@@ -43,7 +43,7 @@ class ForestIndex:
     def calculate_index(self):
         idx = []
 
-        for i in range(0,(len(self.centers)-1)):
+        for i in range(0,len(self.centers)):
             roads = self.roads_list[i]
             if len(roads) > 0:
                 (ti,ati,ei) = self.line_integral(roads,self.centers[i])
