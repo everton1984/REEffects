@@ -21,7 +21,7 @@ points.close()
 
 script = "set terminal png size 4096,4096\n"
 bigscript = "plot \"" + outdir + "/roads_" + prefix + "_all\" with lines "
-for i in range(0,(size-1)):
+for i in range(0,size):
     script = script + "set output \"" + outdir + "/chunks_" + prefix + "_" + str(i) + ".png\"\n"
     script = script + "plot \"" + outdir + "/points_" + prefix + "_" + str(i) + "\" with points, \"" + outdir + "/chunks_" + prefix + "_" + str(i) + "\" with lines\n"
     script = script + "set output \"" + outdir + "/chunks_raw_" + prefix + "_" + str(i) + ".png\"\n"

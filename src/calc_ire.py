@@ -48,7 +48,7 @@ else:
 
 centers = read_centers(cfg['output_dir'] + "/points_" + cfg['output_prefix'] + "_all")
 roads_list = []
-for i in range(0,(len(centers)-1)):
+for i in range(0,len(centers)):
     chunkfName = cfg['output_dir'] + "/chunks_" + cfg['output_prefix'] + "_" + str(i)
     roads = read_roads(chunkfName)
     roads_list.append(roads)
