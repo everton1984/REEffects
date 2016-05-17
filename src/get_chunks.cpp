@@ -106,7 +106,7 @@ int main(int argc, char *argv[]){
         for( Edge_const_iterator eit = output_arr.edges_begin(); eit != output_arr.edges_end(); ++eit){
             bool found = false;
             for( Edge_const_iterator envit = env.edges_begin(); envit != env.edges_end() && !found; ++envit ){
-                if( envit->source()->point().x() == eit->source()->point().x() &&
+                /*if( envit->source()->point().x() == eit->source()->point().x() &&
                         envit->source()->point().y() == eit->source()->point().y() &&
                         envit->target()->point().x() == eit->target()->point().x() &&
                         envit->target()->point().y() == eit->target()->point().y() ){
@@ -116,8 +116,15 @@ int main(int argc, char *argv[]){
                         envit->target()->point().x() == eit->source()->point().x() &&
                         envit->target()->point().y() == eit->source()->point().y() ){
                     found = true;
+                }*/
+                if( (envit->source()->point() == eit->source()->point() &&
+                        envit->target()->point() == eit->target()->point()) ||
+                    (envit->source()->point() == eit->target()->point() &&
+                        envit->target()->point() == eit->source()->point()) ){
+                    found = true;
                 }
             }
+
             if( found ) {
                 Kernel::Segment_2 seg( eit->source()->point(), eit->target()->point() );
                 bounding_roads.push_back(seg);
