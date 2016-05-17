@@ -11,6 +11,9 @@
 //CGAL related includes
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Triangular_expansion_visibility_2.h>
+
+#include <CGAL/intersections.h>
+
 #include <CGAL/Arrangement_2.h>
 #include <CGAL/Arr_segment_traits_2.h>
 #include <CGAL/Arr_naive_point_location.h>
@@ -22,12 +25,20 @@
 
 using namespace::std;
 
-typedef CGAL::Exact_predicates_exact_constructions_kernel       Kernel;
-typedef CGAL::Arr_segment_traits_2<Kernel>                      Traits_2;
-typedef CGAL::Arrangement_2<Traits_2>                           Arrangement_2;
-typedef Arrangement_2::Face_handle                              Face_handle;
-typedef Arrangement_2::Edge_const_iterator                      Edge_const_iterator;
-typedef CGAL::Triangular_expansion_visibility_2<Arrangement_2>  TEV;
+typedef CGAL::Exact_predicates_exact_constructions_kernel                       Kernel;
+typedef CGAL::Arr_segment_traits_2<Kernel>                                      Traits_2;
+typedef CGAL::Arrangement_2<Traits_2>                                           Arrangement_2;
+
+typedef Arrangement_2::Face_handle                                              Face_handle;
+typedef Arrangement_2::Face_const_handle                                        Face_const_handle;
+typedef Arrangement_2::Halfedge_const_handle                                    Halfedge_const_handle;
+
+typedef Arrangement_2::Edge_const_iterator                                      Edge_const_iterator;
+typedef Arrangement_2::Vertex_const_iterator                                    Vertex_const_iterator;
+
+typedef CGAL::Triangular_expansion_visibility_2<Arrangement_2>                  TEV;
+
+typedef CGAL::Arr_point_location_result<Arrangement_2>                          Point_location_result;
 
 void read_config(string fName);
 void read_gis_file(string fname, string plotFname);
@@ -44,9 +55,9 @@ vector<Kernel::Point_2> points;
 unordered_map<string,string> config;
 
 int main(int argc, char *argv[]){
-    //Size of the polygon created aroung each point
+    //Size of the polygon created around each point
     double rmax = 1000;
-    //Database containig roads
+    //Database containing roads
     Arrangement_2 env;
 
     if( argc < 2 ){
@@ -84,10 +95,10 @@ int main(int argc, char *argv[]){
         CGAL::insert(boundArr,boundingPoly.begin(), boundingPoly.end());
 
         //Get the face that this points belongs.
-        Arrangement_2::Face_const_handle *face;
+        Face_const_handle *face;
         CGAL::Arr_naive_point_location<Arrangement_2> pl(boundArr);
-        CGAL::Arr_point_location_result<Arrangement_2>::Type obj = pl.locate(*it);
-        face = boost::get<Arrangement_2::Face_const_handle> (&obj);
+        Point_location_result::Type obj = pl.locate(*it);
+        face = boost::get<Face_const_handle> (&obj);
 
         Arrangement_2 output_arr;
         TEV tev(boundArr);
@@ -99,39 +110,28 @@ int main(int argc, char *argv[]){
         dump_arrangement(&output_arr,config["output_dir"] + "/chunks_raw_" + config["output_prefix"] +  "_" + to_string(i));
 
         //Once everything is calculated the visibility creates some extra edges. Since
-        //we just want real road segments we have to calculate the intersection. This smells wrong
-        //and is clumsy but works for now.
+        //we just want real road segments we have to calculate the intersection. 
         Arrangement_2 res;
         vector<Kernel::Segment_2> bounding_roads;
-        for( Edge_const_iterator eit = output_arr.edges_begin(); eit != output_arr.edges_end(); ++eit){
+        for( Edge_const_iterator envit = env.edges_begin(); envit != env.edges_end(); ++envit){
+            Kernel::Segment_2 env_edge = envit->curve();
             bool found = false;
-            for( Edge_const_iterator envit = env.edges_begin(); envit != env.edges_end() && !found; ++envit ){
-                /*if( envit->source()->point().x() == eit->source()->point().x() &&
-                        envit->source()->point().y() == eit->source()->point().y() &&
-                        envit->target()->point().x() == eit->target()->point().x() &&
-                        envit->target()->point().y() == eit->target()->point().y() ){
-                    found = true;
-                }else if(envit->source()->point().x() == eit->target()->point().x() &&
-                        envit->source()->point().y() == eit->target()->point().y() &&
-                        envit->target()->point().x() == eit->source()->point().x() &&
-                        envit->target()->point().y() == eit->source()->point().y() ){
-                    found = true;
-                }*/
-                if( (envit->source()->point() == eit->source()->point() &&
-                        envit->target()->point() == eit->target()->point()) ||
-                    (envit->source()->point() == eit->target()->point() &&
-                        envit->target()->point() == eit->source()->point()) ){
-                    found = true;
-                }
-            }
 
-            if( found ) {
-                Kernel::Segment_2 seg( eit->source()->point(), eit->target()->point() );
-                bounding_roads.push_back(seg);
+            for( Edge_const_iterator eit = output_arr.edges_begin(); eit != output_arr.edges_end() && !found; ++eit ){
+                Kernel::Segment_2 out_edge = eit->curve();
+
+                CGAL::cpp11::result_of<Kernel::Intersect_2(Kernel::Segment_2,Kernel::Segment_2)>::type 
+                    inter = CGAL::intersection(env_edge,out_edge);
+                if(inter) {
+                    if(const Kernel::Segment_2 *inter_seg = boost::get<Kernel::Segment_2>(&*inter)){
+                        bounding_roads.push_back(*inter_seg);
+                        found = true;
+                    }
+                }
             }
         }
         CGAL::insert(res, bounding_roads.begin(), bounding_roads.end());
-
+       
         //Writing everything to output files.
         ofstream pf;
         pf.open(config["output_dir"] + "/points_" + config["output_prefix"] +  "_" + to_string(i));
@@ -252,10 +252,11 @@ void read_gis_file(string fname, string plotFname){
                         vector<Kernel::Segment_2> thisRoad;
 
                         l->getPoint(0,&pStart);
+                        plotFile << pStart.getX() << " " << pStart.getY() << endl;
                         for(int i = 1; i < l->getNumPoints(); i++){
                             l->getPoint(i,&pEnd);
                             
-                            plotFile << pStart.getX() << " " << pStart.getY() << endl;
+                            plotFile << pEnd.getX() << " " << pEnd.getY() << endl;
 
                             Kernel::Point_2 pointStart(pStart.getX(),pStart.getY());
                             Kernel::Point_2 pointEnd(pEnd.getX(),pEnd.getY());

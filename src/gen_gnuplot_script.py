@@ -19,7 +19,7 @@ points = open(outdir + "/points_" + prefix + "_all")
 size = len(points.readlines())
 points.close()
 
-script = "set terminal png size 4096,4096\n"
+script = "set terminal png size 2048,2048\n"
 bigscript = "plot \"" + outdir + "/roads_" + prefix + "_all\" with lines "
 for i in range(0,size):
     script = script + "set output \"" + outdir + "/chunks_" + prefix + "_" + str(i) + ".png\"\n"
