@@ -2,7 +2,7 @@
 
 ** Building **
 
-You will need GDAl and CGAL to build and run this project. Once this is taken care at the root directory type:
+You will need GDAl, CGAL, cmake and boost to build and run this project. Once this is taken care, at the root directory type:
 
 $./configure
 $./build
