@@ -253,6 +253,7 @@ void read_gis_file(string fname, string plotFname){
 
                         l->getPoint(0,&pStart);
                         plotFile << pStart.getX() << " " << pStart.getY() << endl;
+                        //cout << l->getNumPoints() << endl;
                         for(int i = 1; i < l->getNumPoints(); i++){
                             l->getPoint(i,&pEnd);
                             
