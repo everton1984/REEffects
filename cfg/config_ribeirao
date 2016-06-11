@@ -1,0 +1,8 @@
+A = 0.057
+B = 16.12
+K = 10000
+Rmax = 1000
+output_dir = ./out/ribeirao
+output_prefix = ribeirao
+input_roads_file = ./data/gis/ribeirao/ribeirao_road+classe.shp
+input_points_file = ./data/gis/ribeirao/Ribeirao_coord_mamif.shp
