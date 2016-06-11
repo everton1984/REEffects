@@ -268,6 +268,39 @@ void read_gis_file(string fname, string plotFname){
                         }
                         roads.push_back(thisRoad);
                         plotFile << endl;
+                    } else if( wkbFlatten(geom->getGeometryType()) == wkbMultiLineString ){
+                        OGRMultiLineString *ml = (OGRMultiLineString *)geom;
+                        for(int i = 0; i < ml->getNumGeometries(); i++){
+                            /* [DEBUG] Fix me! */
+                            if( wkbFlatten(ml->getGeometryRef(i)->getGeometryType()) == wkbLineString ){
+                                OGRLineString *l = (OGRLineString *) ml->getGeometryRef(i);
+                                OGRPoint pStart = OGRPoint();
+                                OGRPoint pEnd = OGRPoint();
+                                vector<Kernel::Segment_2> thisRoad;
+
+                                l->getPoint(0,&pStart);
+                                plotFile << pStart.getX() << " " << pStart.getY() << endl;
+                                for(int i = 1; i < l->getNumPoints(); i++){
+                                    l->getPoint(i,&pEnd);
+                                    
+                                    plotFile << pEnd.getX() << " " << pEnd.getY() << endl;
+
+                                    Kernel::Point_2 pointStart(pStart.getX(),pStart.getY());
+                                    Kernel::Point_2 pointEnd(pEnd.getX(),pEnd.getY());
+                                    
+                                    thisRoad.push_back(Kernel::Segment_2(pointStart,pointEnd));
+
+                                    pStart = pEnd;
+                                }
+                                roads.push_back(thisRoad);
+                                plotFile << endl;                           
+                            } else {
+                                cout << "[WARNING] Unrecognized geometry: " 
+                                    << wkbFlatten(ml->getGeometryRef(i)->getGeometryType()) << endl;
+                            }
+                        }
+                    } else {
+                        cout << "[WARNING] Unrecognized geometry: " << wkbFlatten(geom->getGeometryType()) << endl;
                     }
                 }
 
