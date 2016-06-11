@@ -58,6 +58,11 @@ fidx = ForestIndex(ire,roads_list,centers)
 
 res = fidx.calculate_index()
 
-print "idx,ire,avire,error"
+#write output 
+of = open(cfg['output_dir'] + "/results_" + cfg['output_prefix'] + ".csv",'w')
+
+of.write("idx,ire,avire,error\n")
 for r in res:
-    print r[0],",",r[1],",",r[2],",",r[3]
+    of.write(str(r[0]) + "," + str(r[1]) + "," + str(r[2]) + "," + str(r[3]) + "\n")
+
+of.close()
