@@ -299,6 +299,61 @@ void read_gis_file(string fname, string plotFname){
                                     << wkbFlatten(ml->getGeometryRef(i)->getGeometryType()) << endl;
                             }
                         }
+                    } else if( wkbFlatten(geom->getGeometryType()) == wkbPolygon ){
+                        cout << "POLYGON" << endl;
+                    } else if( wkbFlatten(geom->getGeometryType()) == wkbMultiPolygon ) {
+                        OGRMultiPolygon *mp = (OGRMultiPolygon *)geom;
+                        for( int i = 0; i < mp->getNumGeometries(); i++){
+                            if( wkbFlatten(mp->getGeometryRef(i)->getGeometryType()) == wkbPolygon ){
+                                OGRPolygon *pol = (OGRPolygon *) mp->getGeometryRef(i);
+                                OGRLinearRing *l = (OGRLinearRing *) pol->getExteriorRing();
+                                OGRPoint pStart = OGRPoint();
+                                OGRPoint pEnd = OGRPoint();
+                                vector<Kernel::Segment_2> thisRoad;
+
+                                l->getPoint(0,&pStart);
+                                plotFile << pStart.getX() << " " << pStart.getY() << endl;
+                                for(int i = 1; i < l->getNumPoints(); i++){
+                                    l->getPoint(i,&pEnd);
+                                    
+                                    plotFile << pEnd.getX() << " " << pEnd.getY() << endl;
+
+                                    Kernel::Point_2 pointStart(pStart.getX(),pStart.getY());
+                                    Kernel::Point_2 pointEnd(pEnd.getX(),pEnd.getY());
+                                    
+                                    thisRoad.push_back(Kernel::Segment_2(pointStart,pointEnd));
+
+                                    pStart = pEnd;
+                                }
+                                roads.push_back(thisRoad);
+                                plotFile << endl;
+
+                                for(int j = 0; j < pol->getNumInteriorRings(); j++){
+                                    l = (OGRLinearRing *) pol->getInteriorRing(j);
+                                    pStart = OGRPoint();
+                                    pEnd = OGRPoint();
+                                    
+                                    l->getPoint(0,&pStart);
+                                    plotFile << pStart.getX() << " " << pStart.getY() << endl;
+                                    for(int i = 1; i < l->getNumPoints(); i++){
+                                        l->getPoint(i,&pEnd);
+                                        
+                                        plotFile << pEnd.getX() << " " << pEnd.getY() << endl;
+
+                                        Kernel::Point_2 pointStart(pStart.getX(),pStart.getY());
+                                        Kernel::Point_2 pointEnd(pEnd.getX(),pEnd.getY());
+                                        
+                                        thisRoad.push_back(Kernel::Segment_2(pointStart,pointEnd));
+
+                                        pStart = pEnd;
+                                    }
+                                    roads.push_back(thisRoad);
+                                    plotFile << endl;             
+                                }
+                            } else {
+                                cout << "[WARNING] Unrecognized geometry: " << wkbFlatten(mp->getGeometryRef(i)->getGeometryType()) << endl;
+                            }
+                        }
                     } else {
                         cout << "[WARNING] Unrecognized geometry: " << wkbFlatten(geom->getGeometryType()) << endl;
                     }
