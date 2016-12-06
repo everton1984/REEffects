@@ -4,4 +4,4 @@ mkdir -p tmp
 cd src
 cgal_create_CMakeLists
 cd ../bin
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-lgdal ../src
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-lgdal -std=c++11" ../src
