@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 cfg=$1
 if [[ -z $cfg ]]; then
     echo "Please run with 'run.sh <config_file>'"

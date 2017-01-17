@@ -6,7 +6,7 @@
 #include <vector>
 
 //GIS related includes
-#include <ogrsf_frmts.h>
+#include <gdal/ogrsf_frmts.h>
 
 //CGAL related includes
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
