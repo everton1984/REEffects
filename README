@@ -11,7 +11,7 @@ sudo apt-get install git cmake libcgal-devl libgdal-dev gnuplot python-numpy pyt
 - Clone the repository on your preferred directory:
 git clone https://github.com/everton1984/Malex.git
 
-- Change to the correct directory, configure and build
+- Change to the correct directory, configure and build:
 
 cd Malex
 ./configure
