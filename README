@@ -1,15 +1,21 @@
 # Malex
 
-** Building **
+** Installing and Building **
 
-You will need GDAl, CGAL, cmake and boost to build and run this project. Once this is taken care, at the root directory type:
+This steps were tested on vanilla Ubuntu 16.10. Just go to the terminal and type the following sequence of commands:
 
-$./configure
-$./build
+- First install the required packages:
 
-This should do the trick.
+sudo apt-get install git cmake libcgal-devl libgdal-dev gnuplot python-numpy python-scipy
 
-For the Python part you will need SciPy.
+- Clone the repository on your preferred directory:
+git clone https://github.com/everton1984/Malex.git
+
+- Change to the correct directory, configure and build
+
+cd Malex
+./configure
+./build
 
 ** Running **
 
