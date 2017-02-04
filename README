@@ -1,12 +1,18 @@
 # Malex
 
+** Using the MalexUbuntu Image **
+
+In case you´re willing or able to download and install Malex just download and run 
+the MalexSnapshot on VirtualBox, you will start Ubuntu with a terminal open at the Malex directory, simply 
+read the Running section below.
+
 ** Installing and Building **
 
 This steps were tested on vanilla Ubuntu 16.10. Just go to the terminal and type the following sequence of commands:
 
 - First install the required packages:
 
-sudo apt-get install git cmake libcgal-devl libgdal-dev gnuplot python-numpy python-scipy
+sudo apt-get install git cmake libcgal-dev libgdal-dev gnuplot python-numpy python-scipy
 
 - Clone the repository on your preferred directory:
 git clone https://github.com/everton1984/Malex.git
@@ -17,6 +23,10 @@ cd Malex
 ./configure
 ./build
 
+You might end up with a linking problem with GDAL, for now the solution 
+is to manually alter the Makefile inside build/CMakeFiles/get_chunks/links.txt
+and change the position of -lgdal to the end of the file.
+
 ** Running **
 
 Make sure you have a config file, examples can be found at the cfg directory. Then go to the root directory and type:
@@ -24,6 +34,14 @@ Make sure you have a config file, examples can be found at the cfg directory. Th
 $./run.sh <config_file>
 
 Fill the config_file part with the address to the config file you want to use.
+
+Be aware that right now the run.sh script is not really failing very gracefully, in case you run into problems here
+is a checklist before sending a bug report:
+
+1. Make sure the output directory on the config file is correctly set and created.
+2. Check that both the roads and features files exist as set on the config file.
+
+In case you get an error message complaining that the Geometry is undefined please post a new feature request.
 
 ** Changelog **
 
