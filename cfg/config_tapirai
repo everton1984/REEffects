@@ -4,5 +4,5 @@ K = 10000
 Rmax = 1000
 output_dir = ./out/tapirai
 output_prefix = tapirai
-input_roads_file = ./data/gis/tapirai/Tapirai_road+classe.shp
+input_lines_file = ./data/gis/tapirai/Tapirai_road+classe.shp
 input_points_file = ./data/gis/tapirai/Tapirai_coord_mamif.shp

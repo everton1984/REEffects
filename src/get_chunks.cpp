@@ -74,13 +74,13 @@ int main(int argc, char *argv[]){
 
     cout << "Reading gis files..." << endl;
 
-    read_gis_file(config["input_roads_file"], config["output_dir"] + "/roads_" + config["output_prefix"] + "_all");
+    read_gis_file(config["input_lines_file"], config["output_dir"] + "/lines_" + config["output_prefix"] + "_all");
     read_gis_file(config["input_points_file"], config["output_dir"] + "/points_" + config["output_prefix"] + "_all");
 
-    cout << "Number of roads read: " << roads.size() << endl;
+    cout << "Number of lines read: " << roads.size() << endl;
     cout << "Number of points read: " << points.size() << endl;
 
-    cout << "Generating roads database..." << endl;
+    cout << "Generating lines database..." << endl;
     create_environment(&env);
 
     int i = 0;
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]){
 
         dump_arrangement(&res,config["output_dir"] + "/chunks_" + config["output_prefix"]  +  "_" + to_string(i));
 
-        cout << "\tnumber of roads intersecting point: " << res.number_of_edges() << endl;
+        cout << "\tnumber of lines intersecting point: " << res.number_of_edges() << endl;
         i++;
     }
     
