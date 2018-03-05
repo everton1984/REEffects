@@ -1,10 +1,4 @@
-# Malex
-
-** Using the MalexUbuntu Image **
-
-In case you´re unwilling or unable to install Malex just download and run 
-the MalexSnapshot on VirtualBox, you will start Ubuntu with a terminal open at the Malex directory, simply 
-read the Running section below.
+# REEffects
 
 ** Installing and Building **
 
@@ -15,11 +9,11 @@ This steps were tested on vanilla Ubuntu 16.10. Just go to the terminal and type
 sudo apt-get install git cmake libcgal-dev libgdal-dev gnuplot python-numpy python-scipy
 
 - Clone the repository on your preferred directory:
-git clone https://github.com/everton1984/Malex.git
+git clone https://github.com/everton1984/REEffects.git
 
 - Change to the correct directory, configure and build:
 
-cd Malex
+cd REEffects
 ./configure
 ./build
 
@@ -42,21 +36,3 @@ is a checklist before sending a bug report:
 2. Check that both the roads and features files exist as set on the config file.
 
 In case you get an error message complaining that the Geometry is undefined please post a new feature request.
-
-** Changelog **
-
-12/05/2016 - 
-    # Now everything is way more straightforward just read the Building/Running section of this README.
-
-10/05/2016 - 
-    # Now you need the out folder, run get_chunks to create the visible neighborhoods of the points and finally run
-    calc_ire.py
-    # I'm using SciPy to calculate IRE.
-
-25/04/2016 - 
-    # You need boost, cgal, gmp, mpfr and gdal to build this. On Archlinux I had just to add gdal and cgal as I remember. Right now the "build"
-script is ugly but it works, should think about updating it in the future.
-
-Older[ Deprecated right now ] - 
-    # Change include directory on the build script ** automate this **
-    # Run pyire.py from within the bin directory so the module can be loaded ** fix this **
