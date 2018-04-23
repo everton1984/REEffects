@@ -61,7 +61,7 @@ res = fidx.calculate_index()
 #write output 
 of = open(cfg['output_dir'] + "/results_" + cfg['output_prefix'] + ".csv",'w')
 
-of.write("idx,ire,avire,error\n")
+of.write("idx,lie,avlie,error\n")
 for r in res:
     of.write(str(r[0]) + "," + str(r[1]) + "," + str(r[2]) + "," + str(r[3]) + "\n")
 
